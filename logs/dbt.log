@@ -1,0 +1,72 @@
+[0m18:33:10.758551 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10a14a330>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10b2d9790>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10b2d9340>]}
+
+
+============================== 18:33:10.761239 | 080492a4-ab34-43f4-b8e2-4c63639c449e ==============================
+[0m18:33:10.761239 [info ] [MainThread]: Running with dbt=1.11.12
+[0m18:33:10.761508 [debug] [MainThread]: running dbt with arguments {'warn_error': 'None', 'use_colors': 'True', 'debug': 'False', 'profiles_dir': '/Users/gayathriananya/.dbt', 'cache_selected_only': 'False', 'target_path': 'None', 'log_path': 'logs', 'introspect': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'invocation_command': 'dbt init dbt', 'quiet': 'False', 'empty': 'None', 'use_experimental_parser': 'False', 'send_anonymous_usage_stats': 'True', 'fail_fast': 'False', 'indirect_selection': 'eager', 'printer_width': '80', 'log_cache_events': 'False', 'write_json': 'True', 'version_check': 'True', 'log_format': 'default', 'partial_parse': 'True', 'no_print': 'None', 'static_parser': 'True'}
+[0m18:34:22.313170 [debug] [MainThread]: Starter project path: /Users/gayathriananya/Library/CloudStorage/OneDrive-Personal/github_bananya/chicago-airbnb-pipeline/.venv/lib/python3.12/site-packages/dbt/include/starter_project
+[0m18:34:22.327544 [info ] [MainThread]: 
+Your new dbt project "chicago_airbnb_pipeline" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m18:34:22.328338 [info ] [MainThread]: Setting up your profile.
+[0m18:34:56.897926 [debug] [MainThread]: Snowflake adapter: Setting snowflake.connector to ERROR (file logging only)
+[0m18:34:56.898199 [debug] [MainThread]: Snowflake adapter: Setting botocore to ERROR (file logging only)
+[0m18:34:56.898341 [debug] [MainThread]: Snowflake adapter: Setting boto3 to ERROR (file logging only)
+[0m18:37:31.540715 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10d55d160>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10d1fd5b0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10d8f9520>]}
+
+
+============================== 18:37:31.543447 | 44b9ce24-7222-4ef9-805d-184be56c5ef9 ==============================
+[0m18:37:31.543447 [info ] [MainThread]: Running with dbt=1.11.12
+[0m18:37:31.543718 [debug] [MainThread]: running dbt with arguments {'invocation_command': 'dbt init dbt', 'partial_parse': 'True', 'log_cache_events': 'False', 'quiet': 'False', 'printer_width': '80', 'version_check': 'True', 'fail_fast': 'False', 'send_anonymous_usage_stats': 'True', 'target_path': 'None', 'introspect': 'True', 'debug': 'False', 'empty': 'None', 'warn_error': 'None', 'log_format': 'default', 'use_experimental_parser': 'False', 'indirect_selection': 'eager', 'log_path': 'logs', 'write_json': 'True', 'static_parser': 'True', 'use_colors': 'True', 'no_print': 'None', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'cache_selected_only': 'False', 'profiles_dir': '/Users/gayathriananya/.dbt'}
+[0m18:37:48.036574 [info ] [MainThread]: A project called chicago_airbnb_pipeline already exists here.
+[0m18:37:48.044542 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": true, "command_wall_clock_time": 16.539782, "process_in_blocks": "0", "process_kernel_time": 0.112696, "process_mem_max_rss": "108658688", "process_out_blocks": "0", "process_user_time": 0.582876}
+[0m18:37:48.045613 [debug] [MainThread]: Command `dbt init` succeeded at 18:37:48.045465 after 16.54 seconds
+[0m18:37:48.046083 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10d5f5a00>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1048c6c30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10d987a70>]}
+[0m18:37:48.046507 [debug] [MainThread]: Flushing usage events
+[0m18:37:48.397391 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m18:37:54.790489 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x108e123c0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x109fa15b0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x109fa12e0>]}
+
+
+============================== 18:37:54.793066 | 88ba65a2-ba8b-4c89-a673-01b9ae24bd30 ==============================
+[0m18:37:54.793066 [info ] [MainThread]: Running with dbt=1.11.12
+[0m18:37:54.793336 [debug] [MainThread]: running dbt with arguments {'log_format': 'default', 'send_anonymous_usage_stats': 'True', 'indirect_selection': 'eager', 'printer_width': '80', 'use_experimental_parser': 'False', 'warn_error': 'None', 'no_print': 'None', 'target_path': 'None', 'empty': 'None', 'log_path': 'logs', 'write_json': 'True', 'partial_parse': 'True', 'fail_fast': 'False', 'debug': 'False', 'introspect': 'True', 'quiet': 'False', 'use_colors': 'True', 'log_cache_events': 'False', 'cache_selected_only': 'False', 'invocation_command': 'dbt init dbt', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'profiles_dir': '/Users/gayathriananya/.dbt', 'static_parser': 'True', 'version_check': 'True'}
+[0m18:38:06.029659 [debug] [MainThread]: Starter project path: /Users/gayathriananya/Library/CloudStorage/OneDrive-Personal/github_bananya/chicago-airbnb-pipeline/.venv/lib/python3.12/site-packages/dbt/include/starter_project
+[0m18:38:06.046022 [info ] [MainThread]: 
+Your new dbt project "airbnb_pipeline" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m18:38:06.046616 [info ] [MainThread]: Setting up your profile.
+[0m18:38:22.179786 [debug] [MainThread]: Snowflake adapter: Setting snowflake.connector to ERROR (file logging only)
+[0m18:38:22.180191 [debug] [MainThread]: Snowflake adapter: Setting botocore to ERROR (file logging only)
+[0m18:38:22.180343 [debug] [MainThread]: Snowflake adapter: Setting boto3 to ERROR (file logging only)
+[0m18:40:07.001158 [info ] [MainThread]: Profile airbnb_pipeline written to /Users/gayathriananya/.dbt/profiles.yml using target's profile_template.yml and your supplied values. Run 'dbt debug' to validate the connection.
+[0m18:40:07.009255 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": true, "command_wall_clock_time": 132.24992, "process_in_blocks": "0", "process_kernel_time": 0.152604, "process_mem_max_rss": "133660672", "process_out_blocks": "0", "process_user_time": 0.704157}
+[0m18:40:07.015352 [debug] [MainThread]: Command `dbt init` succeeded at 18:40:07.014455 after 132.26 seconds
+[0m18:40:07.016227 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x109fa1490>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10b89d4c0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x109e59ac0>]}
+[0m18:40:07.016847 [debug] [MainThread]: Flushing usage events
+[0m18:40:07.335866 [debug] [MainThread]: An error was encountered while trying to flush usage events
