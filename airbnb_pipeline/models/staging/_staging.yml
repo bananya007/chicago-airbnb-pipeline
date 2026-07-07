@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: stg_calendar
+    description: One row per listing per calendar date per snapshot.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [listing_id, calendar_date, snapshot_date]
+    columns:
+      - name: listing_id
+        data_tests: [not_null]
+      - name: price
+        data_tests:
+          - not_null:
+              config: {severity: warn}     
+
+  - name: stg_listings
+    description: One row per listing per snapshot.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [listing_id, snapshot_date]
+    columns:
+      - name: listing_id
+        data_tests: [not_null]
+      - name: host_id
+        data_tests: [not_null]
+      - name: room_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['Entire home/apt', 'Private room', 'Shared room', 'Hotel room']
+
+  - name: stg_hosts
+    description: One row per host per snapshot (deduped from listings).
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [host_id, snapshot_date]
+    columns:
+      - name: host_id
+        data_tests: [not_null]
+
+  - name: stg_reviews
+    description: One row per review, deduped across snapshots.
+    columns:
+      - name: review_id
+        data_tests: [unique, not_null]
+      - name: listing_id
+        data_tests: [not_null]

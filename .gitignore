@@ -9,3 +9,14 @@ data/
 
 # virtual environment
 env/
+.venv/
+
+airbnb_pipeline/target/
+airbnb_pipeline/dbt_packages/
+airbnb_pipeline/logs/
+airbnb_pipeline/.user.yml
+
+logs/
+
+# docs
+docs/ingestion.md
