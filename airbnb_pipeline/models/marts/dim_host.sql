@@ -6,7 +6,7 @@ hashed as (
     select *,
         {{ dbt_utils.generate_surrogate_key([
             'is_superhost','host_response_time','host_response_rate','host_acceptance_rate','host_listings_count',
-            'is_identified_verified'
+            'is_identity_verified'
         ]) }} as attr_hash
         from hosts
 ),
@@ -19,7 +19,7 @@ version_starts as (
     select *
     from with_prev
     where prev_attr_hash is null or attr_hash <> prev_attr_hash
-)
+),
 versioned as (
     select *,
         snapshot_date as valid_from,
@@ -35,7 +35,7 @@ select
     host_response_rate,
     host_acceptance_rate,
     is_superhost,
-    host_listing_count,
+    host_listings_count,
     is_identity_verified,
     valid_from,
     valid_to,

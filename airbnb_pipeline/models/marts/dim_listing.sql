@@ -28,7 +28,7 @@ versioned as (
     select *,
         snapshot_date as valid_from,
         lead(snapshot_date) over (partition by listing_id order by snapshot_date) as valid_to
-    from changes
+    from version_starts
 )
 select
     {{ dbt_utils.generate_surrogate_key(['listing_id', 'valid_from']) }} as listing_key,
