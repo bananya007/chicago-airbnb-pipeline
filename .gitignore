@@ -16,7 +16,7 @@ airbnb_pipeline/dbt_packages/
 airbnb_pipeline/logs/
 airbnb_pipeline/.user.yml
 
-log/
+logs/
 
 # docs
 docs/ingestion.md
