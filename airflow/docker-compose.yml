@@ -4,9 +4,11 @@ services:
     ports:
       - "8080:8080"
     env_file:
-      - path: .env
+      - path: ../.env
         required: false
     environment:
+      AIRBNB_S3_BUCKET: chicago-airbnb
+      AIRBNB_SNOWFLAKE_ACCOUNT: BULBFZZ-CR56067
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
       AIRFLOW__CORE__EXECUTOR: SequentialExecutor
       AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
