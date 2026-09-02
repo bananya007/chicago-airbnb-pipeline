@@ -18,6 +18,10 @@ airbnb_pipeline/.user.yml
 
 logs/
 
+# Python bytecode
+__pycache__/
+*.py[cod]
+
 # docs
 docs/ingestion.md
 docs/staging.md

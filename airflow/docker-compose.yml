@@ -1,0 +1,21 @@
+services:
+  airflow:
+    build: .
+    ports:
+      - "8080:8080"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "false"
+      AIRFLOW_UID: "50000"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./include:/opt/airflow/include
+      - ../ingestion:/opt/airflow/project/ingestion
+      - ../airbnb_pipeline:/opt/airflow/project/dbt
+      - ../data:/opt/airflow/project/data
+    command: standalone
