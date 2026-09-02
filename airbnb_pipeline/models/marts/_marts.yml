@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: fct_calendar_day
+  - name: fact_calendar_day
     description: One row per listing per calendar date per snapshot.
     columns:
       - name: calendar_day_key
