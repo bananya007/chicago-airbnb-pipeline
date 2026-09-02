@@ -65,21 +65,25 @@ def snowpipe_loaded(**context):
             ("LISTINGS", "listings"),
             ("REVIEWS", "reviews"),
         ):
+            # A rerun may reuse a filename already recorded by Snowpipe.
+            # Check landed rows as well as recent COPY_HISTORY so valid
+            # idempotent reruns do not wait for a new Snowpipe event.
+            source_pattern = f"raw/{prefix}/dt={snapshot_date}/%"
             cur.execute(
                 f"""
                 SELECT COUNT(*)
-                FROM TABLE(INFORMATION_SCHEMA.COPY_HISTORY(
-                    TABLE_NAME => 'AIRBNB.RAW.{table}',
-                    START_TIME => DATEADD(hour, -2, CURRENT_TIMESTAMP())
-                ))
-                WHERE STATUS = 'Loaded'
-                  AND FILE_NAME ILIKE '%{prefix}/dt={snapshot_date}/%'
-                """
+                FROM AIRBNB.RAW.{table}
+                WHERE _SOURCE_FILE ILIKE %s
+                """,
+                (source_pattern,),
             )
-            if cur.fetchone()[0] < 1:
+            landed_rows = cur.fetchone()[0]
+            print(f"{table}: {landed_rows} landed rows for {source_pattern}")
+            if landed_rows < 1:
                 raise AirflowException(
                     f"{table} file for {snapshot_date} is not loaded by Snowpipe"
                 )
+        return True
     finally:
         conn.close()
 
