@@ -120,9 +120,12 @@ with DAG(
     dbt_build = BashOperator(
         task_id="dbt_build",
         bash_command=(
-            "dbt deps --project-dir /opt/airflow/project/dbt --no-partial-parse "
+            "dbt deps --project-dir /opt/airflow/project/dbt "
+            "--log-path /tmp/dbt-logs "
+            "--no-partial-parse "
             "&& dbt build --project-dir /opt/airflow/project/dbt "
             "--profiles-dir /opt/airflow/include --target prod "
+            "--target-path /tmp/dbt-target --log-path /tmp/dbt-logs "
             "--no-partial-parse"
         ),
     )
