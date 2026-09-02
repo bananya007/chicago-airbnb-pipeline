@@ -122,7 +122,8 @@ with DAG(
         bash_command=(
             "dbt deps --project-dir /opt/airflow/project/dbt "
             "&& dbt build --project-dir /opt/airflow/project/dbt "
-            "--profiles-dir /opt/airflow/include --target prod"
+            "--profiles-dir /opt/airflow/include --target prod "
+            "--no-partial-parse"
         ),
     )
 
