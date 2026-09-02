@@ -1,0 +1,13 @@
+airbnb_pipeline:
+  target: prod
+  outputs:
+    prod:
+      type: snowflake
+      account: "{{ env_var('AIRBNB_SNOWFLAKE_ACCOUNT', 'BULBFZZ-CR56067') }}"
+      user: "{{ env_var('AIRBNB_SNOWFLAKE_USER') }}"
+      password: "{{ env_var('AIRBNB_SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('AIRBNB_SNOWFLAKE_ROLE', 'DBT_ROLE') }}"
+      database: "{{ env_var('AIRBNB_SNOWFLAKE_DATABASE', 'AIRBNB') }}"
+      warehouse: "{{ env_var('AIRBNB_SNOWFLAKE_WAREHOUSE', 'TRANSFORM_WH') }}"
+      schema: "{{ env_var('AIRBNB_SNOWFLAKE_SCHEMA', 'DBT_ANANYA') }}"
+      threads: 4

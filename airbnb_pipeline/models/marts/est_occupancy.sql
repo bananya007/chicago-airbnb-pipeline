@@ -10,14 +10,22 @@ monthly_reviews as (
     from {{ ref('fct_reviews') }}
     group by 1, 2
 ),
+calendar_ranked as (
+    select *,
+           row_number() over (
+               partition by listing_id, date_trunc('month', calendar_date)
+               order by snapshot_date desc
+           ) as rn
+    from {{ ref('fact_calendar_day') }}
+),
 monthly_calendar as (
     select listing_id,
            date_trunc('month', calendar_date) as month_start,
            avg(price)                          as avg_price,
            avg(minimum_nights)                 as avg_min_nights
-    from {{ ref('fct_calendar_day') }}
-    qualify snapshot_date = max(snapshot_date) over (partition by listing_id, date_trunc('month', calendar_date))
-    group by 1, 2, snapshot_date
+    from calendar_ranked
+    where rn = 1
+    group by 1, 2
 ),
 combined as (
     select r.listing_id, r.month_start, rates.review_rate, r.reviews_in_month,

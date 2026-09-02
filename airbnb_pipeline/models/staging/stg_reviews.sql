@@ -9,9 +9,13 @@ deduped as (
         try_cast(reviewer_id as number)                  as reviewer_id,
         {{ extract_snapshot_date('_source_file') }}      as first_seen_snapshot,
         row_number() over (
-            partition by cast(id as number)
-            order by {{ extract_snapshot_date('_source_file') }}
+            partition by cast(listing_id as number), cast(id as number)
+            order by {{ extract_snapshot_date('_source_file') }}, _file_row
         ) as rn
     from source
 )
-select * exclude rn from deduped where rn = 1
+select
+    {{ dbt_utils.generate_surrogate_key(['listing_id', 'review_id']) }} as review_key,
+    * exclude rn
+from deduped
+where rn = 1

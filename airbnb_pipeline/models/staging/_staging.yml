@@ -10,6 +10,8 @@ models:
     columns:
       - name: listing_id
         data_tests: [not_null]
+      - name: calendar_day_key
+        data_tests: [unique, not_null]
       - name: price
         data_tests:
           - not_null:
@@ -24,6 +26,8 @@ models:
     columns:
       - name: listing_id
         data_tests: [not_null]
+      - name: listing_snapshot_key
+        data_tests: [unique, not_null]
       - name: host_id
         data_tests: [not_null]
       - name: room_type
@@ -46,6 +50,8 @@ models:
     description: One row per review, deduped across snapshots.
     columns:
       - name: review_id
+        data_tests: [unique, not_null]
+      - name: review_key
         data_tests: [unique, not_null]
       - name: listing_id
         data_tests: [not_null]

@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile Python sources
+        run: python -m compileall -q airflow ingestion
+
+      - name: Install dbt runtime
+        run: pip install dbt-core==1.7.19 dbt-snowflake==1.7.3
+
+      - name: Resolve dbt packages
+        working-directory: airbnb_pipeline
+        run: dbt deps --no-partial-parse
+
+      - name: Parse dbt project
+        env:
+          AIRBNB_SNOWFLAKE_ACCOUNT: ci-placeholder
+          AIRBNB_SNOWFLAKE_USER: ci-placeholder
+          AIRBNB_SNOWFLAKE_PASSWORD: ci-placeholder
+        run: dbt parse --project-dir airbnb_pipeline --profiles-dir airflow/include --target prod --no-partial-parse

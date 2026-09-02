@@ -1,0 +1,4 @@
+apache-airflow-providers-amazon
+apache-airflow-providers-snowflake
+dbt-core==1.7.19
+dbt-snowflake==1.7.3

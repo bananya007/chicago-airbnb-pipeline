@@ -1,4 +1,4 @@
-create pipe airbnb.raw.pipe_listings
+create or replace pipe airbnb.raw.pipe_listings
     auto_ingest = TRUE 
 as 
     COPY INTO AIRBNB.RAW.LISTINGS (
@@ -103,5 +103,5 @@ as
         METADATA$FILE_ROW_NUMBER
         FROM @AIRBNB.RAW.S3_RAW/listings/
     )
-FILE_FORMAT = (FORMAT_NAME = AIRBNB.RAW.CSV_GZ);
-
+FILE_FORMAT = (FORMAT_NAME = AIRBNB.RAW.CSV_GZ)
+ON_ERROR = 'SKIP_FILE';
