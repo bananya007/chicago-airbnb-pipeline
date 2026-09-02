@@ -8,7 +8,7 @@ CREATE FILE FORMAT AIRBNB.RAW.CSV_GZ
 
 CREATE STAGE AIRBNB.RAW.S3_RAW
   STORAGE_INTEGRATION = s3_airbnb_int
-  URL = 's3://chicago-airbnb-raw-ananya/raw/'
+  URL = 's3://chicago-airbnb/raw/'
   FILE_FORMAT = AIRBNB.RAW.CSV_GZ;
 
 LIST @AIRBNB.RAW.S3_RAW;
