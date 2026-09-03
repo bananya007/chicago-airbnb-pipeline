@@ -1,6 +1,6 @@
 # Airflow snapshot schedule
 
-`chicago_airbnb_snapshot_load` runs at 02:00 on the first day of January, April, July, and October (`0 2 1 1,4,7,10 *`).
+`chicago_airbnb_snapshot_load` checks for a new source publication every Monday at 02:00 (`0 2 * * 1`). The ETL path runs only when the discovered date is newer than the stored watermark, so the pipeline still processes quarterly snapshots rather than reloading every week.
 
 Inside Airbnb publishes snapshots on irregular dates, so the DAG discovers the current published date from the official data page. The Airflow Variable `airbnb_snapshot_date` stores the last successfully loaded snapshot; it is updated automatically only after the dbt build succeeds.
 

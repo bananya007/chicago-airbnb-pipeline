@@ -137,7 +137,9 @@ def snowpipe_loaded(**context):
 with DAG(
     dag_id="chicago_airbnb_snapshot_load",
     start_date=datetime(2026, 1, 1),
-    schedule="0 2 1 1,4,7,10 *",
+    # Check weekly because source publication dates are not exact quarter dates.
+    # The ETL path runs only when discovery finds a date newer than the watermark.
+    schedule="0 2 * * 1",
     catchup=False,
     max_active_runs=1,
     default_args={
