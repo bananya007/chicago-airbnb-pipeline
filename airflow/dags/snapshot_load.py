@@ -104,6 +104,7 @@ with DAG(
         "retries": 2,
         "retry_delay": timedelta(minutes=2),
         "retry_exponential_backoff": True,
+        "email": os.environ.get("AIRFLOW_ALERT_EMAIL"),
         "email_on_failure": True,
         "email_on_retry": False,
     },
