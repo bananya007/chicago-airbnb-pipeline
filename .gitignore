@@ -23,5 +23,6 @@ __pycache__/
 *.py[cod]
 
 # docs
+PROJECT_PLAYBOOK.md
 docs/ingestion.md
 docs/staging.md
