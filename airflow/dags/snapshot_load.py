@@ -15,9 +15,13 @@ from airflow.exceptions import AirflowException
 from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
 from airflow.sensors.python import PythonSensor
+from airflow.models import Variable
 
 FILES = ("listings", "calendar", "reviews")
 BASE_URL = "https://data.insideairbnb.com/united-states/il/chicago/{date}/data/{file}.csv.gz"
+DEFAULT_SNAPSHOT_DATE = Variable.get(
+    "airbnb_snapshot_date", default_var="2026-06-24"
+)
 
 
 def download_and_upload(**context):
@@ -91,9 +95,10 @@ def snowpipe_loaded(**context):
 with DAG(
     dag_id="chicago_airbnb_snapshot_load",
     start_date=datetime(2026, 1, 1),
-    schedule=None,
+    schedule="0 2 1 1,4,7,10 *",
     catchup=False,
-    params={"snapshot_date": "2026-06-24"},
+    max_active_runs=1,
+    params={"snapshot_date": DEFAULT_SNAPSHOT_DATE},
     default_args={
         "owner": "data-engineering",
         "retries": 2,
