@@ -5,6 +5,7 @@ from __future__ import annotations
 import csv
 import gzip
 import os
+import re
 import urllib.request
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -12,22 +13,65 @@ from pathlib import Path
 import snowflake.connector
 from airflow import DAG
 from airflow.exceptions import AirflowException
-from airflow.operators.python import PythonOperator
-from airflow.operators.bash import BashOperator
-from airflow.sensors.python import PythonSensor
 from airflow.models import Variable
+from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator, ShortCircuitOperator
+from airflow.sensors.python import PythonSensor
 
 FILES = ("listings", "calendar", "reviews")
 BASE_URL = "https://data.insideairbnb.com/united-states/il/chicago/{date}/data/{file}.csv.gz"
-DEFAULT_SNAPSHOT_DATE = Variable.get(
-    "airbnb_snapshot_date", default_var="2026-06-24"
-)
+DATA_PAGE_URL = "https://insideairbnb.com/get-the-data/"
+INITIAL_SNAPSHOT_DATE = "2026-06-24"
+
+
+def resolve_snapshot_date(**context):
+    override = context["dag_run"].conf.get("snapshot_date")
+    if override:
+        return override
+
+    with urllib.request.urlopen(DATA_PAGE_URL, timeout=30) as response:
+        page = response.read().decode("utf-8")
+    chicago = re.search(
+        r"<h3[^>]*>\s*Chicago[^<]*</h3>(.*?)(?=<h3\b|\Z)",
+        page,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+    if not chicago:
+        raise AirflowException("Could not find Chicago on the Inside Airbnb data page")
+    published = re.search(
+        r"<h4[^>]*>\s*(\d{1,2} [A-Za-z]+, \d{4})", chicago.group(1)
+    )
+    if not published:
+        raise AirflowException("Could not find the latest Chicago snapshot date")
+    return datetime.strptime(published.group(1), "%d %B, %Y").date().isoformat()
+
+
+def should_process_snapshot(**context):
+    dag_run = context["dag_run"]
+    latest = context["ti"].xcom_pull(task_ids="resolve_snapshot_date")
+    last_loaded = Variable.get("airbnb_snapshot_date", default_var=INITIAL_SNAPSHOT_DATE)
+    if dag_run.conf.get("snapshot_date"):
+        print(f"Manual snapshot override requested: {latest}")
+        return True
+    if latest <= last_loaded:
+        print(f"No new snapshot: latest={latest}, last_loaded={last_loaded}")
+        return False
+    print(f"New snapshot available: {latest} (last_loaded={last_loaded})")
+    return True
+
+
+def update_last_loaded_snapshot(**context):
+    processed = context["ti"].xcom_pull(task_ids="resolve_snapshot_date")
+    current = Variable.get("airbnb_snapshot_date", default_var=INITIAL_SNAPSHOT_DATE)
+    if processed > current:
+        Variable.set("airbnb_snapshot_date", processed)
+        print(f"Updated airbnb_snapshot_date from {current} to {processed}")
+    else:
+        print(f"Kept airbnb_snapshot_date at {current}; processed={processed}")
 
 
 def download_and_upload(**context):
-    snapshot_date = context["dag_run"].conf.get(
-        "snapshot_date", context["params"]["snapshot_date"]
-    )
+    snapshot_date = context["ti"].xcom_pull(task_ids="resolve_snapshot_date")
     bucket = os.environ["AIRBNB_S3_BUCKET"]
     import boto3
 
@@ -50,9 +94,7 @@ def download_and_upload(**context):
 
 
 def snowpipe_loaded(**context):
-    snapshot_date = context["dag_run"].conf.get(
-        "snapshot_date", context["params"]["snapshot_date"]
-    )
+    snapshot_date = context["ti"].xcom_pull(task_ids="resolve_snapshot_date")
     conn = snowflake.connector.connect(
         account=os.environ["AIRBNB_SNOWFLAKE_ACCOUNT"],
         user=os.environ["AIRBNB_SNOWFLAKE_USER"],
@@ -98,7 +140,6 @@ with DAG(
     schedule="0 2 1 1,4,7,10 *",
     catchup=False,
     max_active_runs=1,
-    params={"snapshot_date": DEFAULT_SNAPSHOT_DATE},
     default_args={
         "owner": "data-engineering",
         "retries": 2,
@@ -110,6 +151,16 @@ with DAG(
     },
     tags=["airbnb", "snowpipe", "dbt"],
 ) as dag:
+    resolve_snapshot = PythonOperator(
+        task_id="resolve_snapshot_date",
+        python_callable=resolve_snapshot_date,
+    )
+
+    process_snapshot = ShortCircuitOperator(
+        task_id="process_snapshot_if_new",
+        python_callable=should_process_snapshot,
+    )
+
     upload_snapshot = PythonOperator(
         task_id="download_and_upload_snapshot",
         python_callable=download_and_upload,
@@ -136,4 +187,10 @@ with DAG(
         ),
     )
 
-    upload_snapshot >> wait_for_snowpipe >> dbt_build
+    update_snapshot_pointer = PythonOperator(
+        task_id="update_last_loaded_snapshot",
+        python_callable=update_last_loaded_snapshot,
+    )
+
+    resolve_snapshot >> process_snapshot >> upload_snapshot
+    upload_snapshot >> wait_for_snowpipe >> dbt_build >> update_snapshot_pointer

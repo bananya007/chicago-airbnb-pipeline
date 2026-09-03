@@ -47,14 +47,9 @@ The pipeline is designed to be safely rerun after partial failures:
 
 ## Airflow schedule
 
-The `chicago_airbnb_snapshot_load` DAG runs quarterly at 02:00 on January 1, April 1, July 1, and October 1. Because Inside Airbnb publishes files on specific dates rather than exact quarter boundaries, the DAG reads the current source date from the Airflow Variable `airbnb_snapshot_date`.
+The `chicago_airbnb_snapshot_load` DAG runs quarterly at 02:00 on January 1, April 1, July 1, and October 1. Each run discovers the latest Chicago publication date from Inside Airbnb and compares it with the Airflow Variable `airbnb_snapshot_date`, which represents the last successfully loaded snapshot.
 
-Update the variable when a new snapshot is published:
-
-```bash
-docker compose -f airflow/docker-compose.yml exec airflow \
-  airflow variables set airbnb_snapshot_date YYYY-MM-DD
-```
+If no newer snapshot exists, the DAG exits without processing. After a successful dbt build, the DAG updates the Variable automatically. A failed run leaves the pointer unchanged so it can be safely retried.
 
 Manual runs can override the date with:
 
