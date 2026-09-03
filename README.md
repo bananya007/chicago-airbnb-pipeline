@@ -49,9 +49,9 @@ The pipeline is designed to be safely rerun after partial failures:
 
 The `chicago_airbnb_snapshot_load` DAG checks the official source every Monday at 02:00. Each check discovers the latest Chicago publication date and compares it with the Airflow Variable `airbnb_snapshot_date`, which represents the last successfully loaded snapshot. The ETL path runs only when a new quarterly publication is available.
 
-If no newer snapshot exists, the DAG exits without processing. After a successful dbt build, the DAG updates the Variable automatically. A failed run leaves the pointer unchanged so it can be safely retried.
+If no newer snapshot exists, the DAG exits without processing. After a successful dbt build, the DAG updates the Variable automatically. A failed run leaves the pointer unchanged so it can be safely retried. If the Variable does not yet exist, the initial watermark is `2026-06-24`.
 
-Manual runs can override the date with:
+Manual runs accept an exact `snapshot_date` override. The DAG downloads and reloads only that date; it does not substitute the latest source date. The override does not move the watermark backward:
 
 ```json
 {"snapshot_date":"YYYY-MM-DD"}
